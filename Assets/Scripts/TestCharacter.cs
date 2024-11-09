@@ -15,6 +15,13 @@ namespace ProjectHH
         public bool TriggerMeleeAttack;
     }
 
+    public enum TurnState
+    {
+        Turning,
+        BlockTurning,
+        Default
+    }
+
     public enum JumpState
     {
         OnGround,
@@ -33,6 +40,7 @@ namespace ProjectHH
         private const float c_SecondJumpForce = 3.0f;
         private const float c_Gravity = 9.8f;
         private const float c_RotateSpeed = 5f;
+        private const float c_GroundDetectionDistance = 0.5f;
 
         private static int s_FirstJump = Animator.StringToHash("FirstJump");
         private static int s_DoubleJump = Animator.StringToHash("DoubleJump");
@@ -49,6 +57,7 @@ namespace ProjectHH
         private CharacterController _characterController;
         private MoveIntentData _moveIntent;
         private JumpState _jumpState;
+        private TurnState _turnState;
         private float _remainingSpeed;
         private float _rotateProcess = 1;
 
@@ -95,9 +104,10 @@ namespace ProjectHH
             }
 
             _moveIntent.TriggerJump = Input.GetButtonDown("Jump");
-
-            Gizmos.Line(transform.position, transform.position + Vector3.down * 0.01f, Color.red);
-            var result = Physics.Raycast(transform.position, Vector3.down, 0.01f);
+            
+            // 后续需要增大向下打的射线的长度，延迟更新jumpstate
+            Gizmos.Line(transform.position, transform.position + Vector3.down * c_GroundDetectionDistance, Color.red);
+            var result = Physics.Raycast(transform.position, Vector3.down, c_GroundDetectionDistance);
             if (result)
             {
                 _remainingSpeed = 0;
