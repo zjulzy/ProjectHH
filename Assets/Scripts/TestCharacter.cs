@@ -2,6 +2,7 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 using UnityEngine.Timeline;
 using Gizmos = Popcron.Gizmos;
 
@@ -14,33 +15,38 @@ namespace ProjectHH
         public bool IsSprinting;
         public bool TriggerMeleeAttack;
     }
-
-    public enum TurnState
+    
+    [Serializable]
+    public enum TurnState: uint
     {
-        Turning,
-        BlockTurning,
-        Default
+        Turning = 0,
+        Default = 1
     }
 
-    public enum JumpState
+    [Serializable]
+    public enum JumpState: uint
     {
-        OnGround,
-        FirstJump,
-        SecondJump
+        OnGround = 0,
+        FirstJump = 1,
+        SecondJump = 2
     }
 
     public class TestCharacter : MonoBehaviour
     {
         [SerializeField]
         public PlayableAsset PlayableAsset;
+        
+        [SerializeField]
+        public SkillTimelineConfig SkillTimelineConfig;
+        
         # region 常量
 
         private const float c_WalkSpeed = 2.0f;
         private const float c_FirstJumpForce = 5.0f;
         private const float c_SecondJumpForce = 3.0f;
         private const float c_Gravity = 9.8f;
-        private const float c_RotateSpeed = 5f;
-        private const float c_GroundDetectionDistance = 0.5f;
+        private const float c_RotateSpeed = 10f;
+        private const float c_GroundDetectionDistance = 0.01f;
 
         private static int s_FirstJump = Animator.StringToHash("FirstJump");
         private static int s_DoubleJump = Animator.StringToHash("DoubleJump");
@@ -55,11 +61,12 @@ namespace ProjectHH
         private PlayableDirector _playableDirector;
         private Animator _animator;
         private CharacterController _characterController;
-        private MoveIntentData _moveIntent;
-        private JumpState _jumpState;
-        private TurnState _turnState;
+        private MoveIntentData _moveIntent; 
+        public JumpState CurrentJumpState;
+        public TurnState CurrentTurnState;
         private float _remainingSpeed;
         private float _rotateProcess = 1;
+        public bool SkillBlockMoving = false;
 
         private static int s_IsMoving = Animator.StringToHash("IsMoving");
 
@@ -67,11 +74,13 @@ namespace ProjectHH
 
         #endregion
 
+        #region Lifecycle
+
         void Start()
         {
-            _animator = GetComponentInChildren<Animator>();
+            _animator = GetComponent<Animator>();
             _characterController = GetComponent<CharacterController>();
-            _playableDirector = GetComponentInChildren<PlayableDirector>();
+            _playableDirector = GetComponent<PlayableDirector>();
             // _rigidBody = _characterController.attachedRigidbody;
         }
 
@@ -80,20 +89,29 @@ namespace ProjectHH
             var horizentalInput = Input.GetAxis("Horizontal");
             _moveIntent.TriggerMeleeAttack = Input.GetMouseButtonDown(0);
 
-            if (Math.Abs(horizentalInput) < 0.01f)
+            if (Math.Abs(horizentalInput) < 0.01f || CheckBlockMoving())
             {
                 _animator.SetBool(s_IsMoving, false);
             }
             else
             {
                 var deltaTime = Time.deltaTime;
-                if (_jumpState == JumpState.OnGround)
+                if (CurrentJumpState == JumpState.OnGround)
                 {
                     _animator.SetBool(s_IsMoving, true);
                     
                     _rotateProcess = Math.Clamp(_rotateProcess + horizentalInput * c_RotateSpeed * deltaTime, 0, 1);
                     transform.rotation = Quaternion.Euler(0, (1-_rotateProcess) * 180, 0);
                     _moveIntent.MoveVelocity = Vector3.Dot(transform.forward ,Vector3.forward) * c_WalkSpeed*Vector3.forward;
+                    
+                    if(_rotateProcess == 0 || _rotateProcess == 1)
+                    {
+                        CurrentTurnState = TurnState.Default;
+                    }
+                    else
+                    {
+                        CurrentTurnState = TurnState.Turning;
+                    }
                     
                 }
                 else
@@ -111,7 +129,7 @@ namespace ProjectHH
             if (result)
             {
                 _remainingSpeed = 0;
-                _jumpState = JumpState.OnGround;
+                CurrentJumpState = JumpState.OnGround;
                 _animator.SetBool(s_IsOnGround, true);
             }
             else
@@ -120,18 +138,18 @@ namespace ProjectHH
             }
 
 
-            if (_moveIntent.TriggerJump)
+            if (_moveIntent.TriggerJump && !CheckBlockJump())
             {
                 _moveIntent.TriggerJump = false;
-                switch (_jumpState)
+                switch (CurrentJumpState)
                 {
                     case JumpState.OnGround:
-                        _jumpState = JumpState.FirstJump;
+                        CurrentJumpState = JumpState.FirstJump;
                         _animator.SetTrigger(s_FirstJump);
                         PlayerJump(false);
                         break;
                     case JumpState.FirstJump:
-                        _jumpState = JumpState.SecondJump;
+                        CurrentJumpState = JumpState.SecondJump;
                         PlayerJump(true);
                         break;
                     case JumpState.SecondJump:
@@ -146,13 +164,17 @@ namespace ProjectHH
                 _remainingSpeed -= c_Gravity * deltaTime;
             }
 
-            if (_moveIntent.TriggerMeleeAttack)
+            if (_moveIntent.TriggerMeleeAttack && !CheckBlockSkill())
             {
                 Debug.Log("Attack");
                 _playableDirector.Play(PlayableAsset, DirectorWrapMode.None);
             }
         }
 
+
+        #endregion
+
+        
         private void PlayerJump(bool isSecondJump = false)
         {
             if (isSecondJump)
@@ -163,6 +185,34 @@ namespace ProjectHH
             {
                 _remainingSpeed = c_FirstJumpForce;
             }
+        }
+        
+        private bool CheckBlockMoving()
+        {
+            return SkillBlockMoving;
+        }
+
+        private bool CheckBlockTurning()
+        {
+            return SkillBlockMoving || CurrentJumpState != JumpState.OnGround;
+        }
+
+        private bool CheckBlockJump()
+        {
+            return SkillBlockMoving || CurrentJumpState == JumpState.SecondJump || CurrentTurnState == TurnState.Turning;
+        }
+
+        private bool CheckBlockSkill()
+        {
+            return SkillBlockMoving || CurrentTurnState == TurnState.Turning;
+        }
+
+        private void OnAnimatorMove()
+        {
+            // 将动画root motion应用到character controller上
+            _characterController.Move(_animator.deltaPosition);
+            
+            return;
         }
     }
 }

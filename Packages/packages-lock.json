@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.greenbamboogames.playablegraphmonitor": {
+      "version": "2.5.9",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.popcron.gizmos": {
       "version": "file:Popcron Gizmos",
       "depth": 0,
@@ -99,6 +106,12 @@
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
+    },
+    "com.unity.playablegraph-visualizer": {
+      "version": "file:C:/Users/lizeyu/Downloads/graph-visualizer-master/graph-visualizer-master",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
     },
     "com.unity.render-pipelines.core": {
       "version": "17.0.3",
