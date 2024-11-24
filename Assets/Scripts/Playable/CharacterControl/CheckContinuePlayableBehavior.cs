@@ -9,6 +9,7 @@ public class CheckContinuePlayableBehavior : PlayableBehaviour
 
     public InputType CheckInputType;
     public PlayableDirector Director;
+    public float JumpTime;
     private bool _shouldContinue;
 
     public bool MoveInterrupt;
@@ -49,8 +50,12 @@ public class CheckContinuePlayableBehavior : PlayableBehaviour
         {
             case InputType.Attack01:
                 bool isAttack01 = Input.GetMouseButtonDown(0);
-                if(isAttack01)
+                if (isAttack01)
+                {
                     _shouldContinue = true;
+                    PlayableDirector director = Character.GetComponent<PlayableDirector>();   
+                    director.time = JumpTime;
+                }
                 break;
             case InputType.Attack02:
             case InputType.SoulAbility:

@@ -18,6 +18,7 @@ public class CheckContinuePlayableAsset : PlayableAsset
     // Factory method that generates a playable based on this asset
     public bool MoveInterrupt = true;
     public InputType InputType;
+    public float JumpTime;
     
     public float MoveInterruptStartTime = 0;
     public override Playable CreatePlayable(PlayableGraph graph, GameObject go)
@@ -28,6 +29,7 @@ public class CheckContinuePlayableAsset : PlayableAsset
         behavior.CheckInputType = InputType;
         behavior.MoveInterrupt = MoveInterrupt;
         behavior.MoveInterruptTime = MoveInterruptStartTime;
+        behavior.JumpTime = JumpTime;
         behavior.Director = go.GetComponent<PlayableDirector>();
         return playable;
     }

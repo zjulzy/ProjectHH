@@ -12,6 +12,7 @@ namespace ProjectHH
     {
         public bool TriggerJump;
         public Vector3 MoveVelocity;
+        public float LastMoveDirection;
         public bool IsSprinting;
         public bool TriggerMeleeAttack;
     }
@@ -31,6 +32,7 @@ namespace ProjectHH
         SecondJump = 2
     }
 
+    [RequireComponent(typeof(CharacterController), typeof(Animator))]
     public class TestCharacter : MonoBehaviour
     {
         [SerializeField]
@@ -64,8 +66,11 @@ namespace ProjectHH
         private MoveIntentData _moveIntent; 
         public JumpState CurrentJumpState;
         public TurnState CurrentTurnState;
-        private float _remainingSpeed;
+        public float _remainingSpeed;
         private float _rotateProcess = 1;
+        
+        // 未来改成tag
+        public bool IsBattle = false;
         public bool SkillBlockMoving = false;
 
         private static int s_IsMoving = Animator.StringToHash("IsMoving");
@@ -92,19 +97,28 @@ namespace ProjectHH
             if (Math.Abs(horizentalInput) < 0.01f || CheckBlockMoving())
             {
                 _animator.SetBool(s_IsMoving, false);
+                if (!SkillBlockMoving)
+                {
+                    if (_rotateProcess != 0 || _rotateProcess != 1)
+                    {
+                        _rotateProcess = Math.Clamp(_rotateProcess + MathF.Sign(horizentalInput) * c_RotateSpeed * Time.deltaTime, 0, 1);
+                        transform.rotation = Quaternion.Euler(0, (1 - _rotateProcess) * 180, 0);
+                    }
+                }
             }
             else
             {
+                _moveIntent.LastMoveDirection = MathF.Sign(horizentalInput);
                 var deltaTime = Time.deltaTime;
                 if (CurrentJumpState == JumpState.OnGround)
                 {
                     _animator.SetBool(s_IsMoving, true);
-                    
-                    _rotateProcess = Math.Clamp(_rotateProcess + horizentalInput * c_RotateSpeed * deltaTime, 0, 1);
-                    transform.rotation = Quaternion.Euler(0, (1-_rotateProcess) * 180, 0);
-                    _moveIntent.MoveVelocity = Vector3.Dot(transform.forward ,Vector3.forward) * c_WalkSpeed*Vector3.forward;
-                    
-                    if(_rotateProcess == 0 || _rotateProcess == 1)
+
+                    _rotateProcess = Math.Clamp(_rotateProcess + MathF.Sign(horizentalInput) * c_RotateSpeed * deltaTime, 0, 1);
+                    transform.rotation = Quaternion.Euler(0, (1 - _rotateProcess) * 180, 0);
+                    _moveIntent.MoveVelocity = Vector3.Dot(transform.forward, Vector3.forward) * c_WalkSpeed * Vector3.forward;
+
+                    if (_rotateProcess == 0 || _rotateProcess == 1)
                     {
                         CurrentTurnState = TurnState.Default;
                     }
@@ -210,9 +224,18 @@ namespace ProjectHH
         private void OnAnimatorMove()
         {
             // 将动画root motion应用到character controller上
-            _characterController.Move(_animator.deltaPosition);
-            
-            return;
+            Vector3 point1 = transform.position + _animator.deltaPosition + Vector3.up * 0.3f;
+            Vector3 point2 = transform.position + _animator.deltaPosition + Vector3.up * 1.3f;
+            if (Physics.OverlapCapsule(point1, point2, 0.3f).Length == 1)
+            {
+                _characterController.Move(_animator.deltaPosition);
+            }
+            else
+            {
+                Debug.Log("Collision");
+                Gizmos.Line(point1, point2, Color.red);
+            }
+
         }
     }
 }
