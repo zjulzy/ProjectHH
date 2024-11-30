@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ProjectHH;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -14,6 +15,9 @@ public class CheckContinuePlayableBehavior : PlayableBehaviour
 
     public bool MoveInterrupt;
     public float MoveInterruptTime;
+    
+    public Dictionary<InputType,ComboSkillType> AllowedInputCombos;
+    public List<InputType> AllowedInputTransforms;
 
     // Called when the owning graph starts playing
     public override void OnGraphStart(Playable playable)

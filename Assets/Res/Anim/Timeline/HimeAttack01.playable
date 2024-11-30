@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfda56da833e2384a9677cd3c976a436, type: 3}
-  m_Name: Hime
+  m_Name: HimeAttack01
   m_EditorClassIdentifier: 
   m_Version: 0
   m_Tracks:
@@ -349,7 +349,43 @@ MonoBehaviour:
   MoveInterrupt: 0
   InputType: 0
   JumpTime: 1.111111
+  AllowedInputTransforms: 
   MoveInterruptStartTime: 0
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: AllowedInputCombos
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[InputType, Assembly-CSharp],[ComboSkillType,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[InputType, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!114 &2597064317225646034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -824,4 +860,40 @@ MonoBehaviour:
   MoveInterrupt: 0
   InputType: 0
   JumpTime: 2.26
+  AllowedInputTransforms: 
   MoveInterruptStartTime: 0
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: AllowedInputCombos
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[InputType, Assembly-CSharp],[ComboSkillType,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[InputType, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 

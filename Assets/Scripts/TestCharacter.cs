@@ -1,7 +1,9 @@
 using System;
+using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 using UnityEngine.Timeline;
 using Gizmos = Popcron.Gizmos;
@@ -15,6 +17,8 @@ namespace ProjectHH
         public float LastMoveDirection;
         public bool IsSprinting;
         public bool TriggerMeleeAttack;
+        public bool TriggerRangeAttack;
+        public bool TriggerSoulAttack;
     }
     
     [Serializable]
@@ -66,8 +70,12 @@ namespace ProjectHH
         private MoveIntentData _moveIntent; 
         public JumpState CurrentJumpState;
         public TurnState CurrentTurnState;
+        
+        [ReadOnly]
         public float _remainingSpeed;
-        private float _rotateProcess = 1;
+        [ProgressBar(0,1)]
+        [ReadOnly]
+        public float _rotateProcess = 1;
         
         // 未来改成tag
         public bool IsBattle = false;
@@ -180,15 +188,20 @@ namespace ProjectHH
 
             if (_moveIntent.TriggerMeleeAttack && !CheckBlockSkill())
             {
-                Debug.Log("Attack");
-                _playableDirector.Play(PlayableAsset, DirectorWrapMode.None);
+                Debug.Log("Attack01");
+                PlayerActivateSkill(InputType.Attack01);
             }
         }
 
 
         #endregion
 
-        
+        private void PlayerActivateSkill(InputType skillType)
+        {
+            TimelineAsset timelineAsset = SkillTimelineConfig.SkillMap[skillType];
+            _playableDirector.Play(timelineAsset,DirectorWrapMode.None);
+        }
+
         private void PlayerJump(bool isSecondJump = false)
         {
             if (isSecondJump)

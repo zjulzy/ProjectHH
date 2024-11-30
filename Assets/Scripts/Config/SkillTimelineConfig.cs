@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
+using Sirenix.OdinInspector;
 
 [CreateAssetMenu(fileName = "HimeTimelineConfig", menuName = "Scriptable Objects/HimeTimelineConfig")]
-public class SkillTimelineConfig : ScriptableObject
+public class SkillTimelineConfig : SerializedScriptableObject
 {
-    public TimelineAsset BasicAttackTimeLine;
+    [ShowInInspector] public Dictionary<InputType, TimelineAsset> SkillMap;
 }
