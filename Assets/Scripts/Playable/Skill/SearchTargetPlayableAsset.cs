@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using ProjectHH;
+using ProjectHH.GameEffect;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -12,6 +15,8 @@ public class SearchTargetPlayableAsset : PlayableAsset
     
     // 技能检测盒的half size
     public Vector3 HitBoxExtent;
+
+    public List<GeConfig> GEList;
     
     public override Playable CreatePlayable(PlayableGraph graph, GameObject go)
     {

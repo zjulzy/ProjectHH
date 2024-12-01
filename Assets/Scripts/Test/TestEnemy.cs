@@ -1,7 +1,8 @@
+using ProjectHH;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class TestEnemy : MonoBehaviour
+public class TestEnemy : CharacterBase
 {
     private MeshRenderer _meshRenderer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

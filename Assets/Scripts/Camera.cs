@@ -31,7 +31,7 @@ namespace ProjectHH
                 transform.position = Vector3.Lerp(transform.position, targetPosition, CameraAttachProperty);
             }
 
-            transform.forward = (_testCharacter.transform.position - transform.position).normalized;
+            transform.forward = (lookAtPoint - transform.position).normalized;
         }
     }
 }

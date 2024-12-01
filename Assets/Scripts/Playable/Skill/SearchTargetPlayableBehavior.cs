@@ -17,6 +17,12 @@ public class SearchTargetPlayableBehavior : PlayableBehaviour
         foreach (var r in result)
         {
             var gameObject = r.gameObject;
+            var enemy = r.GetComponent<TestEnemy>();
+            if (enemy != null)
+            {
+                enemy.SetHealth(enemy.CurrentHealth - 10);
+            }
+
             var meshRender = gameObject.GetComponent<MeshRenderer>();
             if (meshRender != null)
             {

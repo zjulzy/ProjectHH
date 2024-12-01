@@ -37,7 +37,7 @@ namespace ProjectHH
     }
 
     [RequireComponent(typeof(CharacterController), typeof(Animator))]
-    public class TestCharacter : MonoBehaviour
+    public class TestCharacter : CharacterBase
     {
         [SerializeField]
         public PlayableAsset PlayableAsset;
