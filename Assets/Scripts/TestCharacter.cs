@@ -101,6 +101,7 @@ namespace ProjectHH
         {
             var horizentalInput = Input.GetAxis("Horizontal");
             _moveIntent.TriggerMeleeAttack = Input.GetMouseButtonDown(0);
+            _moveIntent.TriggerRangeAttack = Input.GetMouseButtonDown(1);
 
             if (Math.Abs(horizentalInput) < 0.01f || CheckBlockMoving())
             {
@@ -185,11 +186,17 @@ namespace ProjectHH
                 _characterController.Move(Vector3.up * _remainingSpeed * deltaTime);
                 _remainingSpeed -= c_Gravity * deltaTime;
             }
-
+            
+            // 处理技能释放
             if (_moveIntent.TriggerMeleeAttack && !CheckBlockSkill())
             {
                 Debug.Log("Attack01");
                 PlayerActivateSkill(InputType.Attack01);
+            }
+            else if (_moveIntent.TriggerRangeAttack && !CheckBlockSkill())
+            {
+                Debug.Log("Attack02");
+                PlayerActivateSkill(InputType.Attack02);
             }
         }
 

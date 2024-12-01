@@ -12,9 +12,6 @@ public class CheckContinuePlayableBehavior : PlayableBehaviour
     public PlayableDirector Director;
     public float JumpTime;
     private bool _shouldContinue;
-
-    public bool MoveInterrupt;
-    public float MoveInterruptTime;
     
     public Dictionary<InputType,ComboSkillType> AllowedInputCombos;
     public List<InputType> AllowedInputTransforms;
@@ -44,12 +41,7 @@ public class CheckContinuePlayableBehavior : PlayableBehaviour
     // Called each frame while the state is set to Play
     public override void PrepareFrame(Playable playable, FrameData info)
     {
-        if (playable.GetDuration() - playable.GetTime() < 0.01)
-        {
-            if(!_shouldContinue)
-                Director.Stop();
-        }
-
+        // 检查当前技能的按键，是否可以延续当前技能
         switch (CheckInputType)
         {
             case InputType.Attack01:
@@ -65,14 +57,15 @@ public class CheckContinuePlayableBehavior : PlayableBehaviour
             case InputType.SoulAbility:
                 break;
         }
-
-        if (MoveInterrupt && Director.time>=MoveInterruptTime)
+        
+        // 如果期间没有按键或者在移动打断点之前检测到了移动输入，需要打断技能
+        if (playable.GetDuration() - playable.GetTime() < 0.01)
         {
-            if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.01)
-            {
-                _shouldContinue = false;
+            if(!_shouldContinue)
                 Director.Stop();
-            }
         }
+        
+        
+        // TODO：检测按键进入其他技能或者连招
     }
 }

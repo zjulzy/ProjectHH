@@ -27,10 +27,8 @@ public class CheckContinuePlayableAsset : PlayableAsset, ISerializationCallbackR
 {
     // Factory method that generates a playable based on this asset
     [Title("技能延续")]
-    [LabelText("是否移动打断")]public bool MoveInterrupt = true;
     [LabelText("当前技能输入类型")]public InputType InputType;
     [LabelText("技能延续跳转时间")]public float JumpTime;
-    [LabelText("移动打断开始时间")]public float MoveInterruptStartTime = 0;
     
     [PropertySpace]
     [Title("技能跳转")]
@@ -44,8 +42,6 @@ public class CheckContinuePlayableAsset : PlayableAsset, ISerializationCallbackR
         var behavior = playable.GetBehaviour();
         behavior.Character = go.GetComponent<TestCharacter>();
         behavior.CheckInputType = InputType;
-        behavior.MoveInterrupt = MoveInterrupt;
-        behavior.MoveInterruptTime = MoveInterruptStartTime;
         behavior.JumpTime = JumpTime;
         behavior.Director = go.GetComponent<PlayableDirector>();
         behavior.AllowedInputCombos = AllowedInputCombos;
