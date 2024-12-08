@@ -43,6 +43,12 @@ namespace ProjectHH
                 {
                     meshRender.material.color = Color.red;
                 }
+
+                var enemy = r.gameObject.GetComponent<CharacterBase>();
+                if (enemy != null)
+                {
+                    enemy.SetHealth(enemy.CurrentHealth - 10);
+                }
             }
             Destroy(gameObject);
         }

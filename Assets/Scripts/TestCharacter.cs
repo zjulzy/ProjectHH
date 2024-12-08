@@ -89,7 +89,7 @@ namespace ProjectHH
 
         #region Lifecycle
 
-        void Start()
+        protected override void Start()
         {
             _animator = GetComponent<Animator>();
             _characterController = GetComponent<CharacterController>();
@@ -158,6 +158,11 @@ namespace ProjectHH
             else
             {
                 _animator.SetBool(s_IsOnGround, false);
+                if (CurrentJumpState == JumpState.OnGround)
+                {
+                    CurrentJumpState = JumpState.FirstJump;
+                    _remainingSpeed = -Time.deltaTime * c_Gravity;
+                }
             }
 
 
@@ -238,7 +243,7 @@ namespace ProjectHH
 
         private bool CheckBlockSkill()
         {
-            return SkillBlockMoving || CurrentTurnState == TurnState.Turning;
+            return SkillBlockMoving || CurrentTurnState == TurnState.Turning|| CurrentJumpState != JumpState.OnGround;
         }
 
         private void OnAnimatorMove()
