@@ -16,7 +16,7 @@ namespace ProjectHH
         [SerializeField] protected int _currentHealth;
         public int CurrentHealth => _currentHealth;
 
-        public void SetHealthBar(int currentHealth)
+        private void SetHealthBar(int currentHealth)
         {
             _healthBar.UpdateHealth(currentHealth / (float)_maxHealth);
         }
@@ -25,6 +25,10 @@ namespace ProjectHH
         {
             _currentHealth = health;
             SetHealthBar(health);
+            if(health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
 
         protected virtual void Start()

@@ -22,12 +22,6 @@ public class SearchTargetPlayableBehavior : PlayableBehaviour
             {
                 enemy.SetHealth(enemy.CurrentHealth - 10);
             }
-
-            var meshRender = gameObject.GetComponent<MeshRenderer>();
-            if (meshRender != null)
-            {
-                meshRender.material.color = Color.red;
-            }
         }
     }
 
