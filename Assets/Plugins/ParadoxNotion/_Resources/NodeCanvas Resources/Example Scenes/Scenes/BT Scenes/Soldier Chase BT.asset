@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Soldier Chase BT
   m_EditorClassIdentifier: 
   _serializedGraph: '{"type":"NodeCanvas.BehaviourTrees.BehaviourTree","nodes":[{"dynamic":true,"_position":{"x":5714.67,"y":5005.979},"$type":"NodeCanvas.BehaviourTrees.Selector","$id":"0"},{"dynamic":true,"_position":{"x":5400.0,"y":5175.0},"_comment":"Dynamic
-    for the Can See target condition","$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"1"},{"_condition":{"target":{"_name":"Target","_targetVariableID":"1c1a3c83-ccd6-49e1-bfb1-30924289768a"},"maxDistance":{"_value":50.0},"layerMask":{"_value":{"value":119}},"awarnessDistance":{"_value":5.0},"viewAngle":{"_value":70.0},"$type":"NodeCanvas.Tasks.Conditions.CanSeeTarget"},"_position":{"x":5280.0,"y":5280.0},"$type":"NodeCanvas.BehaviourTrees.ConditionNode","$id":"2"},{"_position":{"x":5520.0,"y":5295.0},"_comment":"Select
+    for the Can See target condition","$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"1"},{"_condition":{"target":{"_name":"Target","_targetVariableID":"1c1a3c83-ccd6-49e1-bfb1-30924289768a"},"maxDistance":{"_value":50.0},"layerMask":{"_value":{"value":119}},"awarnessDistance":{"_value":5.0},"viewAngle":{"_value":70.0},"$type":"NodeCanvas.Tasks.Conditions.CanSeeTarget"},"_position":{"x":5279.2,"y":5280.0},"$type":"NodeCanvas.BehaviourTrees.ConditionNode","$id":"2"},{"_position":{"x":5520.0,"y":5295.0},"_comment":"Select
     Move or Aim","$type":"NodeCanvas.BehaviourTrees.Selector","$id":"3"},{"dynamic":true,"_position":{"x":5310.0,"y":5415.0},"_comment":"Dynamic
     for the distance check","$type":"NodeCanvas.BehaviourTrees.Sequencer","$id":"4"},{"_condition":{"checkTarget":{"_name":"Target","_targetVariableID":"1c1a3c83-ccd6-49e1-bfb1-30924289768a"},"distance":{"_value":5.0},"_invert":true,"$type":"NodeCanvas.Tasks.Conditions.CheckDistanceToGameObject"},"_position":{"x":5125.0,"y":5531.0},"$type":"NodeCanvas.BehaviourTrees.ConditionNode","$id":"5"},{"policy":1,"_position":{"x":5353.0,"y":5534.0},"$type":"NodeCanvas.BehaviourTrees.Parallel","$id":"6"},{"_action":{"log":{"_value":"Come
     here!"},"labelYOffset":2.2,"$type":"NodeCanvas.Tasks.Actions.DebugLogText"},"_position":{"x":5201.0,"y":5665.0},"_comment":"Log
@@ -36,7 +36,7 @@ MonoBehaviour:
     _comments: Makes the agent move to target up to distance and aim only if the
       agent is able to see the target and the target is in fron of him in the first
       place. Else, it patrols the way points provided in the list variable.
-    _translation: {x: -4908, y: -4911}
+    _translation: {x: -4783, y: -4887}
     _zoomFactor: 1
   _haltSerialization: 0
   _externalSerializationFile: {fileID: 0}

@@ -407,18 +407,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 923175183119940047, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
       propertyPath: _serializedBlackboard
-      value: '{"_variables":{"Target":{"_name":"Target","_id":"771cd6ce-5a41-4f22-9f6a-6dbb1389098b","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
+      value: '{"_variables":{"Target":{"_value":1,"_name":"Target","_id":"771cd6ce-5a41-4f22-9f6a-6dbb1389098b","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
+        UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},"TargetPosition":{"_name":"TargetPosition","_id":"f7a130d7-de03-48e4-b961-99f7374f124a","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.Vector3,
         UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}}}'
       objectReference: {fileID: 0}
     - target: {fileID: 923175183119940047, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
+      propertyPath: _objectReferences.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 923175183119940047, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
+      propertyPath: '_objectReferences.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1128178639}
+    - target: {fileID: 923175183119940047, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
       propertyPath: _serializedVariables.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 923175183119940047, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
       propertyPath: _serializedVariables.Array.data[0]._json
-      value: '{"_name":"Target","_id":"771cd6ce-5a41-4f22-9f6a-6dbb1389098b","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
+      value: '{"_value":1,"_name":"Target","_id":"771cd6ce-5a41-4f22-9f6a-6dbb1389098b","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.GameObject,
         UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}'
       objectReference: {fileID: 0}
+    - target: {fileID: 923175183119940047, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
+      propertyPath: _serializedVariables.Array.data[1]._json
+      value: '{"_name":"TargetPosition","_id":"f7a130d7-de03-48e4-b961-99f7374f124a","$type":"NodeCanvas.Framework.Variable`1[[UnityEngine.Vector3,
+        UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 923175183119940047, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
+      propertyPath: _serializedVariables.Array.data[0]._references.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 923175183119940047, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
+      propertyPath: '_serializedVariables.Array.data[0]._references.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1128178639}
     - target: {fileID: 3414309482650172445, guid: 74e9808e17f53d94e9c8b363c5b7b08b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
