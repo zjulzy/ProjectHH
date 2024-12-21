@@ -1,4 +1,6 @@
+
 using ProjectHH;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class TestEnemy : CharacterBase
@@ -21,10 +23,14 @@ public class TestEnemy : CharacterBase
     {
         _direction = target.transform.position - transform.position;
         _direction.y = 0;
-        _direction.Normalize();
-        transform.rotation = Quaternion.LookRotation(_direction);
-        _speed = 1;
-        transform.position += _direction * _speed * Time.deltaTime;
+        _direction = math.normalizesafe(_direction);
+        if (_direction != default)
+        {
+            transform.rotation = Quaternion.LookRotation(_direction);
+            _speed = 1;
+            transform.position += _direction * _speed * Time.deltaTime;
+        }
+        
         return true;
     }
 
@@ -32,10 +38,14 @@ public class TestEnemy : CharacterBase
     {
         _direction = position - transform.position;
         _direction.y = 0;
-        _direction.Normalize();
-        transform.rotation = Quaternion.LookRotation(_direction);
-        _speed = 1;
-        transform.position += _direction * _speed * Time.deltaTime;
+        _direction = math.normalizesafe(_direction);
+        if (_direction != default)
+        {
+            transform.rotation = Quaternion.LookRotation(_direction);
+            _speed = 1;
+            transform.position += _direction * _speed * Time.deltaTime;
+        }
+        
         return true;
     }
 }
