@@ -43,7 +43,8 @@ namespace ProjectHH
         protected virtual void Start()
         {
             _currentHealth = _maxHealth;
-            _healthBar.UpdateHealth(1);
+            if(_healthBar != null)
+                _healthBar.UpdateHealth(1);
         }
 
         protected virtual void Update()

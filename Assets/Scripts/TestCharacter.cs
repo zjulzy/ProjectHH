@@ -20,16 +20,16 @@ namespace ProjectHH
         public bool TriggerRangeAttack;
         public bool TriggerSoulAttack;
     }
-    
+
     [Serializable]
-    public enum TurnState: uint
+    public enum TurnState : uint
     {
         Turning = 0,
         Default = 1
     }
 
     [Serializable]
-    public enum JumpState: uint
+    public enum JumpState : uint
     {
         OnGround = 0,
         FirstJump = 1,
@@ -39,17 +39,15 @@ namespace ProjectHH
     [RequireComponent(typeof(CharacterController), typeof(Animator))]
     public class TestCharacter : CharacterBase
     {
-        [SerializeField]
-        public PlayableAsset PlayableAsset;
-        
-        [SerializeField]
-        public SkillTimelineConfig SkillTimelineConfig;
-        
+        [SerializeField] public PlayableAsset PlayableAsset;
+
+        [SerializeField] public SkillTimelineConfig SkillTimelineConfig;
+
         # region 常量
 
         private const float c_WalkSpeed = 2.0f;
-        private const float c_FirstJumpForce = 5.0f;
-        private const float c_SecondJumpForce = 3.0f;
+        private const float c_FirstJumpForce = 6.0f;
+        private const float c_SecondJumpForce = 5.0f;
         private const float c_Gravity = 9.8f;
         private const float c_RotateSpeed = 10f;
         private const float c_GroundDetectionDistance = 0.01f;
@@ -67,16 +65,13 @@ namespace ProjectHH
         private PlayableDirector _playableDirector;
         private Animator _animator;
         private CharacterController _characterController;
-        private MoveIntentData _moveIntent; 
+        private MoveIntentData _moveIntent;
         public JumpState CurrentJumpState;
         public TurnState CurrentTurnState;
-        
-        [ReadOnly]
-        public float _remainingSpeed;
-        [ProgressBar(0,1)]
-        [ReadOnly]
-        public float _rotateProcess = 1;
-        
+
+        [ReadOnly] public float _remainingSpeed;
+        [ProgressBar(0, 1)] [ReadOnly] public float _rotateProcess = 1;
+
         // 未来改成tag
         public bool IsBattle = false;
         public bool SkillBlockMoving = false;
@@ -91,9 +86,11 @@ namespace ProjectHH
 
         protected override void Start()
         {
+            base.Start();
             _animator = GetComponent<Animator>();
             _characterController = GetComponent<CharacterController>();
             _playableDirector = GetComponent<PlayableDirector>();
+            _animator.SetBool(s_IsOnGround, true);
             // _rigidBody = _characterController.attachedRigidbody;
         }
 
@@ -135,25 +132,27 @@ namespace ProjectHH
                     {
                         CurrentTurnState = TurnState.Turning;
                     }
-                    
                 }
                 else
                 {
                     _moveIntent.MoveVelocity = horizentalInput * c_WalkSpeed * Vector3.forward;
                 }
+
                 _characterController.Move(_moveIntent.MoveVelocity * deltaTime);
             }
 
             _moveIntent.TriggerJump = Input.GetButtonDown("Jump");
-            
+
             // 后续需要增大向下打的射线的长度，延迟更新jumpstate
-            Gizmos.Line(transform.position, transform.position + Vector3.down * c_GroundDetectionDistance, Color.red);
-            var result = Physics.Raycast(transform.position, Vector3.down, c_GroundDetectionDistance);
-            if (result)
+            Gizmos.Line(transform.position + Vector3.up * c_GroundDetectionDistance, transform.position + Vector3.down * c_GroundDetectionDistance,
+                Color.red);
+            var result = Physics.RaycastAll(transform.position + Vector3.up * c_GroundDetectionDistance, Vector3.down, c_GroundDetectionDistance * 2);
+            if (result.Length > 0)
             {
                 _remainingSpeed = 0;
                 CurrentJumpState = JumpState.OnGround;
                 _animator.SetBool(s_IsOnGround, true);
+                transform.position = new Vector3(transform.position.x, result[0].point.y, transform.position.z);
             }
             else
             {
@@ -191,27 +190,24 @@ namespace ProjectHH
                 _characterController.Move(Vector3.up * _remainingSpeed * deltaTime);
                 _remainingSpeed -= c_Gravity * deltaTime;
             }
-            
+
             // 处理技能释放
             if (_moveIntent.TriggerMeleeAttack && !CheckBlockSkill())
             {
-                Debug.Log("Attack01");
                 PlayerActivateSkill(InputType.Attack01);
             }
             else if (_moveIntent.TriggerRangeAttack && !CheckBlockSkill())
             {
-                Debug.Log("Attack02");
                 PlayerActivateSkill(InputType.Attack02);
             }
         }
-
 
         #endregion
 
         private void PlayerActivateSkill(InputType skillType)
         {
             TimelineAsset timelineAsset = SkillTimelineConfig.SkillMap[skillType];
-            _playableDirector.Play(timelineAsset,DirectorWrapMode.None);
+            _playableDirector.Play(timelineAsset, DirectorWrapMode.None);
         }
 
         private void PlayerJump(bool isSecondJump = false)
@@ -225,7 +221,7 @@ namespace ProjectHH
                 _remainingSpeed = c_FirstJumpForce;
             }
         }
-        
+
         private bool CheckBlockMoving()
         {
             return SkillBlockMoving;
@@ -243,7 +239,7 @@ namespace ProjectHH
 
         private bool CheckBlockSkill()
         {
-            return SkillBlockMoving || CurrentTurnState == TurnState.Turning|| CurrentJumpState != JumpState.OnGround;
+            return SkillBlockMoving || CurrentTurnState == TurnState.Turning || CurrentJumpState != JumpState.OnGround;
         }
 
         private void OnAnimatorMove()
@@ -257,10 +253,8 @@ namespace ProjectHH
             }
             else
             {
-                Debug.Log("Collision");
                 Gizmos.Line(point1, point2, Color.red);
             }
-
         }
     }
 }

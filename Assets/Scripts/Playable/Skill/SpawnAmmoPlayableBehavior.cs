@@ -7,7 +7,7 @@ public class SpawnAmmoPlayableBehavior : PlayableBehaviour
 {
     // Called when the owning graph starts playing
     public Ammo AmmoPrefab;
-    public Transform SpawnPosition;
+    public string SpawnPositionAttachPoint;
 
     public float SpawnTime;
     public PlayableDirector Director;
@@ -38,8 +38,9 @@ public class SpawnAmmoPlayableBehavior : PlayableBehaviour
     {
         if (!_hasSpawned && Director.time >= SpawnTime)
         {
-            Ammo ammo = GameObject.Instantiate(AmmoPrefab, SpawnPosition.position, SpawnPosition.rotation);
-            ammo.transform.forward = SpawnPosition.forward;
+            Transform spawnPosition = Director.gameObject.transform.Find("AttachPoint").Find(SpawnPositionAttachPoint);
+            Ammo ammo = Object.Instantiate(AmmoPrefab, spawnPosition.position, spawnPosition.rotation);
+            ammo.transform.forward = spawnPosition.forward;
             ammo.Initialize();
             _hasSpawned = true;
         }

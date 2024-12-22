@@ -10,7 +10,7 @@ public class SpawnAmmoPlayableAsset : PlayableAsset
     [AssetList]
     public Ammo AmmoPrefab;
 
-    public Transform SpawnPosition;
+    public string SpawnPositionAttachPoint;
     
     public float SpawnTime;
     
@@ -20,7 +20,7 @@ public class SpawnAmmoPlayableAsset : PlayableAsset
         var behavior = playable.GetBehaviour();
         behavior.AmmoPrefab = AmmoPrefab;
         behavior.Director = go.GetComponent<PlayableDirector>();
-        behavior.SpawnPosition = SpawnPosition;
+        behavior.SpawnPositionAttachPoint = SpawnPositionAttachPoint;
         behavior.SpawnTime = SpawnTime;
         return playable;
     }

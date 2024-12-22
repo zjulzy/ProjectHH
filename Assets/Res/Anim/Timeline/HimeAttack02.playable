@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Name: SpawnAmmoPlayableAsset
   m_EditorClassIdentifier: 
   AmmoPrefab: {fileID: 6224651016371037592, guid: 0e608cd7719c74d4a92bd76fb84e7322, type: 3}
-  SpawnPosition: {fileID: 0}
+  SpawnPositionAttachPoint: Danngo
   SpawnTime: 1
 --- !u!114 &-4010803040919493447
 MonoBehaviour:
