@@ -55,6 +55,8 @@ namespace ProjectHH
         private static int s_FirstJump = Animator.StringToHash("FirstJump");
         private static int s_DoubleJump = Animator.StringToHash("DoubleJump");
         private static int s_IsOnGround = Animator.StringToHash("IsOnGround");
+        private static int s_MoveSpeed = Animator.StringToHash("MoveSpeed");
+        private static int s_IsMoving = Animator.StringToHash("IsMoving");
 
         # endregion
 
@@ -75,8 +77,6 @@ namespace ProjectHH
         // 未来改成tag
         public bool IsBattle = false;
         public bool SkillBlockMoving = false;
-
-        private static int s_IsMoving = Animator.StringToHash("IsMoving");
 
         // 战斗相关变量
 
@@ -103,6 +103,7 @@ namespace ProjectHH
             if (Math.Abs(horizentalInput) < 0.01f || CheckBlockMoving())
             {
                 _animator.SetBool(s_IsMoving, false);
+                _animator.SetFloat(s_MoveSpeed, 0);
                 if (!SkillBlockMoving)
                 {
                     if (_rotateProcess != 0 || _rotateProcess != 1)
@@ -118,11 +119,12 @@ namespace ProjectHH
                 var deltaTime = Time.deltaTime;
                 if (CurrentJumpState == JumpState.OnGround)
                 {
+                    // 可以正常行走的情况
                     _animator.SetBool(s_IsMoving, true);
-
+                    _animator.SetFloat(s_MoveSpeed, Math.Abs(horizentalInput) * c_WalkSpeed);
                     _rotateProcess = Math.Clamp(_rotateProcess + MathF.Sign(horizentalInput) * c_RotateSpeed * deltaTime, 0, 1);
                     transform.rotation = Quaternion.Euler(0, (1 - _rotateProcess) * 180, 0);
-                    _moveIntent.MoveVelocity = Vector3.Dot(transform.forward, Vector3.forward) * c_WalkSpeed * Vector3.forward;
+                    _moveIntent.MoveVelocity = Math.Abs(horizentalInput) * Vector3.Dot(transform.forward, Vector3.forward) * c_WalkSpeed * Vector3.forward;
 
                     if (_rotateProcess == 0 || _rotateProcess == 1)
                     {
