@@ -107,12 +107,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.playablegraph-visualizer": {
-      "version": "file:C:/Users/lizeyu/Downloads/graph-visualizer-master/graph-visualizer-master",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.unity.render-pipelines.core": {
       "version": "17.0.3",
       "depth": 1,
