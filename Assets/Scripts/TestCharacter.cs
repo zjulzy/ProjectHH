@@ -124,7 +124,8 @@ namespace ProjectHH
                     _animator.SetFloat(s_MoveSpeed, Math.Abs(horizentalInput) * c_WalkSpeed);
                     _rotateProcess = Math.Clamp(_rotateProcess + MathF.Sign(horizentalInput) * c_RotateSpeed * deltaTime, 0, 1);
                     transform.rotation = Quaternion.Euler(0, (1 - _rotateProcess) * 180, 0);
-                    _moveIntent.MoveVelocity = Math.Abs(horizentalInput) * Vector3.Dot(transform.forward, Vector3.forward) * c_WalkSpeed * Vector3.forward;
+                    _moveIntent.MoveVelocity = Math.Abs(horizentalInput) * Vector3.Dot(transform.forward, Vector3.forward) * c_WalkSpeed *
+                                               Vector3.forward;
 
                     if (_rotateProcess == 0 || _rotateProcess == 1)
                     {
