@@ -1,39 +1,61 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-// 单例游戏示例对象
-public class GameInstance
+namespace ProjectHH
 {
-    private static GameInstance _instance;
-    private Transform _currentPlayer = null;
-
-    // 多线程🔒
-    private static readonly object lockObj = new object();
-
-    public static GameInstance Get()
+    // 单例游戏示例对象
+    public class GameInstance
     {
-        lock (lockObj)
+        private static GameInstance _instance;
+        private Transform _currentPlayer = null;
+
+
+        // 多线程🔒
+        private static readonly object lockObj = new object();
+
+        public static GameInstance Get()
         {
-            if (_instance == null)
+            lock (lockObj)
             {
-                _instance = new GameInstance();
+                if (_instance == null)
+                {
+                    _instance = new GameInstance();
+                }
+
+                return _instance;
+            }
+        }
+
+        private GameInstance()
+        {
+        }
+
+
+        #region system相关
+
+        // 拥有的system变量
+        private List<GameSystemBase> _systems = new List<GameSystemBase>();
+
+        private void CreateSystem<T>(out T system) where T : GameSystemBase, new()
+        {
+            system = new T();
+            _systems.Add(system);
+        }
+
+        #endregion
+
+        # region 对外接口
+
+        public Transform GetCurrentPlayer()
+        {
+            if (_currentPlayer == null)
+            {
+                _currentPlayer = GameObject.FindWithTag("Player").transform;
             }
 
-            return _instance;
+            return _currentPlayer;
         }
-    }
 
-    private GameInstance()
-    {
+        # endregion
     }
-    
-    # region 对外接口
-    public Transform GetCurrentPlayer()
-    {
-        if(_currentPlayer == null)
-        {
-            _currentPlayer = GameObject.FindWithTag("Player").transform;
-        }
-        return _currentPlayer;
-    }
-    # endregion
 }
