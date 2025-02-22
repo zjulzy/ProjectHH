@@ -10,15 +10,15 @@ namespace ProjectHH
         [ShowInInspector, PropertyRange(0,1)]
         public float CameraAttachProperty = 0.8f;
 
-        private TestCharacter _testCharacter;
+        private Transform _testCharacter;
 
         void Start()
         {
-            _testCharacter = GameObject.Find("Hime").GetComponent<TestCharacter>();
+            _testCharacter = GameInstance.Get().GetCurrentPlayer();
         }
 
-        // Update is called once per frame
-        void Update()
+        // 相机的tick放到LateUpdate中
+        void LateUpdate()
         {
             Vector3 lookAtPoint = _testCharacter.transform.position + new Vector3(0, LookAtOffset, 0);
             var targetPosition = lookAtPoint + CameraDistance * Vector3.right;

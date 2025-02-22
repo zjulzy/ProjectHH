@@ -1,22 +1,16 @@
 namespace ProjectHH
 {
-    public class TimerSystem : GameSystemBase
+    public class CharacterSystem: GameSystemBase
     {
-        #region 生命周期
-
+        private CharacterBase _currentControlCharacter;
         protected override void OnInit()
         {
+            
         }
 
         protected override void OnUpdate()
         {
+            
         }
-
-        #endregion
-
-
-        #region 外部接口
-
-        #endregion
     }
 }

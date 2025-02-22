@@ -8,6 +8,7 @@ namespace ProjectHH
     {
         private static GameInstance _instance;
         private Transform _currentPlayer = null;
+        private HimeHinaConfig _mainConfig;
 
 
         // 多线程🔒
@@ -26,8 +27,21 @@ namespace ProjectHH
             }
         }
 
-        private GameInstance()
+        public void Update()
         {
+            foreach (GameSystemBase system in _systems)
+            {
+                system.Update();
+            }
+        }
+
+        public void Init(HimeHinaConfig config)
+        {
+            _mainConfig = config;
+
+            CreateSystem(out _timerSystem);
+            CreateSystem(out _characterSystem);
+            CreateSystem(out _inputSystem);
         }
 
 
@@ -36,9 +50,19 @@ namespace ProjectHH
         // 拥有的system变量
         private List<GameSystemBase> _systems = new List<GameSystemBase>();
 
+        public TimerSystem TimerSystem => _timerSystem;
+        private TimerSystem _timerSystem;
+
+        public CharacterSystem CharacterSystem => _characterSystem;
+        private CharacterSystem _characterSystem;
+
+        public InputSystem InputSystem => _inputSystem;
+        private InputSystem _inputSystem;
+
         private void CreateSystem<T>(out T system) where T : GameSystemBase, new()
         {
             system = new T();
+            system.Init();
             _systems.Add(system);
         }
 
@@ -57,5 +81,22 @@ namespace ProjectHH
         }
 
         # endregion
+
+        # region 读取配置接口
+
+        public void GetInputConfig(ref Dictionary<KeyCode, ControlAction> config)
+        {
+            config = _mainConfig.AllowedControls;
+        }
+
+        public float GetCharacterConfigByString(string key)
+        {
+            float result = 0;
+            _mainConfig.CharacterConfig.TryGetValue(key, out result);
+
+            return result;
+        }
+
+        #endregion
     }
 }
