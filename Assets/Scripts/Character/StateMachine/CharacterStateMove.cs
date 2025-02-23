@@ -43,6 +43,10 @@ namespace ProjectHH.StateMachine
                 else
                 {
                     character.AnimatorStartMove();
+                    if(GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.forward)
+                    {
+                        character.AnimatorTurnBack();
+                    }
                 }
             };
             _moveRightEvent = (state) =>
@@ -54,6 +58,10 @@ namespace ProjectHH.StateMachine
                 else
                 {
                     character.AnimatorStartMove();
+                    if(GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.back)
+                    {
+                        character.AnimatorTurnBack();
+                    }
                 }
             };
         }

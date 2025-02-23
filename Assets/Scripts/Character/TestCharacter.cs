@@ -47,6 +47,7 @@ namespace ProjectHH
         private static int s_IsOnGround = Animator.StringToHash("IsOnGround");
         private static int s_MoveSpeed = Animator.StringToHash("MoveSpeed");
         private static int s_IsMoving = Animator.StringToHash("IsMoving");
+        private static int s_TurnAround = Animator.StringToHash("TurnAround");
 
         #endregion
 
@@ -165,6 +166,11 @@ namespace ProjectHH
         {
             _animator.SetBool(s_IsMoving, true);
             _animator.SetFloat(s_MoveSpeed, 0);
+        }
+
+        public void AnimatorTurnBack()
+        {
+            _animator.SetTrigger(s_TurnAround);
         }
 
         private void PlayerActivateSkill(InputType skillType)
