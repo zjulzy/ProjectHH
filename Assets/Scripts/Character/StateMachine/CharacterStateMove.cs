@@ -7,6 +7,8 @@ namespace ProjectHH.StateMachine
     {
         public override CharacterMoveType CheckSwitchState()
         {
+            if (_switchToInAir)
+                return CharacterMoveType.InAir;
             return CharacterMoveType.None;
         }
 
@@ -14,6 +16,15 @@ namespace ProjectHH.StateMachine
         {
             GameInstance.Get().InputSystem.RegisterEvent(ControlAction.MoveLeft, _moveLeftEvent);
             GameInstance.Get().InputSystem.RegisterEvent(ControlAction.MoveRight, _moveRightEvent);
+            GameInstance.Get().InputSystem.RegisterEvent(ControlAction.Jump, _jumpEvent);
+            _switchToInAir = false;
+        }
+
+        protected override void OnExitState()
+        {
+            GameInstance.Get().InputSystem.UnregisterEvent(ControlAction.MoveLeft, _moveLeftEvent);
+            GameInstance.Get().InputSystem.UnregisterEvent(ControlAction.MoveRight, _moveRightEvent);
+            GameInstance.Get().InputSystem.UnregisterEvent(ControlAction.Jump, _jumpEvent);
         }
 
         protected override void OnUpdate()
@@ -31,6 +42,8 @@ namespace ProjectHH.StateMachine
 
         private Action<KeyState> _moveLeftEvent;
         private Action<KeyState> _moveRightEvent;
+        private Action<KeyState> _jumpEvent;
+        private bool _switchToInAir = false;
 
         public CharacterStateMove(TestCharacter character) : base(character)
         {
@@ -62,6 +75,15 @@ namespace ProjectHH.StateMachine
                     {
                         character.AnimatorTurnBack();
                     }
+                }
+            };
+            
+            _jumpEvent = (state) =>
+            {
+                if (state == KeyState.Pressed)
+                {
+                    _switchToInAir = true;
+                    _character.AnimatorStartJump();
                 }
             };
         }

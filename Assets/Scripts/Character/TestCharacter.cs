@@ -12,7 +12,6 @@ using Gizmos = Popcron.Gizmos;
 
 namespace ProjectHH
 {
-
     [Serializable]
     public enum TurnState : uint
     {
@@ -60,7 +59,7 @@ namespace ProjectHH
         // private Rigidbody _rigidBody;
         private PlayableDirector _playableDirector;
         private Animator _animator;
-        
+
         public CharacterController CharacterController => _characterController;
         private CharacterController _characterController;
         public JumpState CurrentJumpState;
@@ -86,6 +85,7 @@ namespace ProjectHH
             _playableDirector = GetComponent<PlayableDirector>();
             _animator.SetBool(s_IsOnGround, true);
             _stateMap.Add(CharacterMoveType.Move, new CharacterStateMove(this));
+            _stateMap.Add(CharacterMoveType.InAir, new CharacterStateInAir(this));
             _stateMap[_currentMoveType].Enter();
         }
 
@@ -94,37 +94,16 @@ namespace ProjectHH
             base.Update();
             var currentCharacterState = _stateMap[_currentMoveType];
             var nextMoveType = currentCharacterState.CheckSwitchState();
-            if(nextMoveType != CharacterMoveType.None)
+            if (nextMoveType != CharacterMoveType.None)
             {
+                _stateMap[_currentMoveType].Exit();
                 _currentMoveType = currentCharacterState.CheckSwitchState();
                 _stateMap[_currentMoveType].Enter();
                 currentCharacterState = _stateMap[_currentMoveType];
                 _currentMoveType = nextMoveType;
             }
-            currentCharacterState.Update();
-            
-            
 
-            // // 后续需要增大向下打的射线的长度，延迟更新jumpstate
-            // Gizmos.Line(transform.position + Vector3.up * c_GroundDetectionDistance, transform.position + Vector3.down * c_GroundDetectionDistance,
-            //     Color.red);
-            // var result = Physics.RaycastAll(transform.position + Vector3.up * c_GroundDetectionDistance, Vector3.down, c_GroundDetectionDistance * 2);
-            // if (result.Length > 0)
-            // {
-            //     _remainingSpeed = 0;
-            //     CurrentJumpState = JumpState.OnGround;
-            //     _animator.SetBool(s_IsOnGround, true);
-            //     transform.position = new Vector3(transform.position.x, result[0].point.y, transform.position.z);
-            // }
-            // else
-            // {
-            //     _animator.SetBool(s_IsOnGround, false);
-            //     if (CurrentJumpState == JumpState.OnGround)
-            //     {
-            //         CurrentJumpState = JumpState.FirstJump;
-            //         _remainingSpeed = -Time.deltaTime * c_Gravity;
-            //     }
-            // }
+            currentCharacterState.Update();
 
 
             // if (_moveIntent.TriggerJump && !CheckBlockJump())
@@ -156,6 +135,18 @@ namespace ProjectHH
 
         #endregion
 
+        #region Animation
+
+        public void AnimatorStartJump()
+        {
+            _animator.SetBool(s_IsOnGround, false);
+        }
+
+        public void AnimatorLand()
+        {
+            _animator.SetBool(s_IsOnGround, true);
+        }
+
         public void AnimatorStartMove()
         {
             _animator.SetBool(s_IsMoving, false);
@@ -172,6 +163,25 @@ namespace ProjectHH
         {
             _animator.SetTrigger(s_TurnAround);
         }
+
+        private void OnAnimatorMove()
+        {
+            // 将动画root motion应用到character controller上
+            Vector3 point1 = transform.position + _animator.deltaPosition + Vector3.up * 0.3f;
+            Vector3 point2 = transform.position + _animator.deltaPosition + Vector3.up * 1.3f;
+            if (Physics.OverlapCapsule(point1, point2, 0.3f).Length == 1)
+            {
+                _characterController.Move(_animator.deltaPosition);
+            }
+            else
+            {
+                Gizmos.Line(point1, point2, Color.red);
+            }
+        }
+
+        #endregion
+
+        #region Skill
 
         private void PlayerActivateSkill(InputType skillType)
         {
@@ -211,19 +221,6 @@ namespace ProjectHH
             return SkillBlockMoving || CurrentTurnState == TurnState.Turning || CurrentJumpState != JumpState.OnGround;
         }
 
-        private void OnAnimatorMove()
-        {
-            // 将动画root motion应用到character controller上
-            Vector3 point1 = transform.position + _animator.deltaPosition + Vector3.up * 0.3f;
-            Vector3 point2 = transform.position + _animator.deltaPosition + Vector3.up * 1.3f;
-            if (Physics.OverlapCapsule(point1, point2, 0.3f).Length == 1)
-            {
-                _characterController.Move(_animator.deltaPosition);
-            }
-            else
-            {
-                Gizmos.Line(point1, point2, Color.red);
-            }
-        }
+        #endregion
     }
 }

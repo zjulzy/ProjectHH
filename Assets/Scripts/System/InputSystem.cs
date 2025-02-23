@@ -79,6 +79,14 @@ namespace ProjectHH
 
             _eventMap[control].Add(callBack);
         }
+        
+        public void UnregisterEvent(ControlAction control, Action<KeyState> callBack)
+        {
+            if (_eventMap.ContainsKey(control))
+            {
+                _eventMap[control].Remove(callBack);
+            }
+        }
 
         public void InvokeEvent(ControlAction control, KeyState state)
         {

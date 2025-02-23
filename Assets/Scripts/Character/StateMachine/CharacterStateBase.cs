@@ -1,5 +1,5 @@
-using Unity.VisualScripting;
-using UnityEngine.PlayerLoop;
+using UnityEngine;
+using Gizmos = Popcron.Gizmos;
 
 namespace ProjectHH.StateMachine
 {
@@ -26,11 +26,12 @@ namespace ProjectHH.StateMachine
     public abstract class CharacterStateBase
     {
         protected TestCharacter _character;
+
         public CharacterStateBase(TestCharacter character)
         {
             _character = character;
-
         }
+
         public void Enter()
         {
             OnEnterState();
@@ -41,6 +42,22 @@ namespace ProjectHH.StateMachine
             OnUpdate();
         }
 
+        public void Exit()
+        {
+            OnExitState();
+        }
+
+        protected bool GetIsOnGround()
+        {
+            var groundDetectionDistance = GameInstance.Get().GetCharacterConfigByString("GroundDetectionDistance");
+            var startPos = _character.transform.position;
+            // 后续需要增大向下打的射线的长度，延迟更新jumpstate
+            Gizmos.Line(startPos + Vector3.up * groundDetectionDistance, startPos + Vector3.down * groundDetectionDistance, Color.red);
+
+            var result = Physics.RaycastAll(startPos + Vector3.up * groundDetectionDistance, Vector3.down, groundDetectionDistance * 2);
+            return result.Length > 0;
+        }
+
 
         #region 子类实现方法
 
@@ -49,6 +66,8 @@ namespace ProjectHH.StateMachine
         protected abstract void OnEnterState();
 
         protected abstract void OnUpdate();
+
+        protected abstract void OnExitState();
 
         #endregion
     }
