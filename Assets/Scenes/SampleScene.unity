@@ -270,9 +270,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 295da45ae60d5d44c95fd5c5a03bbdf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraDistance: 5
+  CameraDistance: 4.5
   LookAtOffset: 1.5
-  CameraAttachProperty: 0.373
+  SmoothTime: 0.8
+  YawLimit: {x: -30, y: 30}
+  RowLimit: {x: -30, y: 30}
 --- !u!45 &330585549
 Skybox:
   m_ObjectHideFlags: 0
