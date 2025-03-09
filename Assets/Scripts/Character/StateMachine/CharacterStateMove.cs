@@ -5,19 +5,35 @@ namespace ProjectHH.StateMachine
 {
     public class CharacterStateMove : CharacterStateBase
     {
-        public override CharacterMoveType CheckSwitchState()
+        public override (CharacterMoveType, StateTransferObjects) CheckSwitchState()
         {
+            if (!GetIsOnGround())
+            {
+                _switchToInAir = true;
+            }
+
             if (_switchToInAir)
-                return CharacterMoveType.InAir;
-            return CharacterMoveType.None;
+                return (CharacterMoveType.InAir, _stateTransferObjects);
+            return (CharacterMoveType.None, default);
         }
 
-        protected override void OnEnterState()
+        protected override void OnEnterState(StateTransferObjects stateTransferObj)
         {
             GameInstance.Get().InputSystem.RegisterEvent(ControlAction.MoveLeft, _moveLeftEvent);
             GameInstance.Get().InputSystem.RegisterEvent(ControlAction.MoveRight, _moveRightEvent);
             GameInstance.Get().InputSystem.RegisterEvent(ControlAction.Jump, _jumpEvent);
             _switchToInAir = false;
+
+            // 如果是由滞空状态转化到移动状态，那么需要在这里设置初始动画速度
+            if (GameInstance.Get().InputSystem.CurrentState[ControlAction.MoveLeft] !=
+                GameInstance.Get().InputSystem.CurrentState[ControlAction.MoveRight])
+            {
+                _character.AnimatorStartMove();
+            }
+            else
+            {
+                _character.AnimatorStopMove();
+            }
         }
 
         protected override void OnExitState()
@@ -56,7 +72,7 @@ namespace ProjectHH.StateMachine
                 else
                 {
                     character.AnimatorStartMove();
-                    if(GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.forward)
+                    if (GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.forward)
                     {
                         character.AnimatorTurnBack();
                     }
@@ -71,18 +87,19 @@ namespace ProjectHH.StateMachine
                 else
                 {
                     character.AnimatorStartMove();
-                    if(GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.back)
+                    if (GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.back)
                     {
                         character.AnimatorTurnBack();
                     }
                 }
             };
-            
+
             _jumpEvent = (state) =>
             {
                 if (state == KeyState.Pressed)
                 {
                     _switchToInAir = true;
+                    _stateTransferObjects.InitialVertialSpeed = GameInstance.Get().GetCharacterConfigByString("FirstJumpForce");
                     _character.AnimatorStartJump();
                 }
             };

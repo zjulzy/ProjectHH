@@ -52,18 +52,20 @@ namespace ProjectHH
                 var control = _inputMap[key];
                 if (Input.GetKeyDown(key))
                 {
-                    InvokeEvent(control, KeyState.Pressed);
+                    Debug.Log($"Key {key} pressed");
                     if (_currentState[control] == KeyState.Unpressed)
                     {
+                        InvokeEvent(control, KeyState.Pressed);
                         _currentState[control] = KeyState.Pressed;
                     }
                 }
 
                 if (Input.GetKeyUp(key))
                 {
-                    InvokeEvent(control, KeyState.Unpressed);
+                    Debug.Log($"Key {key} unpressed");
                     if (_currentState[control] == KeyState.Pressed)
                     {
+                        InvokeEvent(control, KeyState.Unpressed);
                         _currentState[control] = KeyState.Unpressed;
                     }
                 }

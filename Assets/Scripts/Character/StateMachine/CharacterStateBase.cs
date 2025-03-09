@@ -32,9 +32,10 @@ namespace ProjectHH.StateMachine
             _character = character;
         }
 
-        public void Enter()
+        public void Enter(StateTransferObjects stateTransferObj)
         {
-            OnEnterState();
+            OnEnterState(stateTransferObj);
+            _stateTransferObjects = default;
         }
 
         public void Update()
@@ -61,9 +62,15 @@ namespace ProjectHH.StateMachine
 
         #region 子类实现方法
 
-        public abstract CharacterMoveType CheckSwitchState();
+        public struct StateTransferObjects
+        {
+            public float InitialVertialSpeed;
+        }
+        protected StateTransferObjects _stateTransferObjects;
 
-        protected abstract void OnEnterState();
+        public abstract (CharacterMoveType, StateTransferObjects) CheckSwitchState();
+
+        protected abstract void OnEnterState(StateTransferObjects stateTransferObj);
 
         protected abstract void OnUpdate();
 

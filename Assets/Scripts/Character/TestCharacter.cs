@@ -86,21 +86,21 @@ namespace ProjectHH
             _animator.SetBool(s_IsOnGround, true);
             _stateMap.Add(CharacterMoveType.Move, new CharacterStateMove(this));
             _stateMap.Add(CharacterMoveType.InAir, new CharacterStateInAir(this));
-            _stateMap[_currentMoveType].Enter();
+            _stateMap[_currentMoveType].Enter(default);
         }
 
         void Update()
         {
             base.Update();
             var currentCharacterState = _stateMap[_currentMoveType];
-            var nextMoveType = currentCharacterState.CheckSwitchState();
+            var (nextMoveType, stateTransferObj) = currentCharacterState.CheckSwitchState();
             if (nextMoveType != CharacterMoveType.None)
             {
+                Debug.Log($"Switch to {nextMoveType}");
                 _stateMap[_currentMoveType].Exit();
-                _currentMoveType = currentCharacterState.CheckSwitchState();
-                _stateMap[_currentMoveType].Enter();
-                currentCharacterState = _stateMap[_currentMoveType];
                 _currentMoveType = nextMoveType;
+                _stateMap[_currentMoveType].Enter(stateTransferObj);
+                currentCharacterState = _stateMap[_currentMoveType];
             }
 
             currentCharacterState.Update();
