@@ -45,6 +45,12 @@ namespace ProjectHH.StateMachine
 
             _character.CharacterController.Move(moveStep);
         }
+        
+        
+        public float GetVerticalSpeed()
+        {
+            return _verticalSpeed;
+        }
 
 
         public CharacterStateInAir(TestCharacter character) : base(character)

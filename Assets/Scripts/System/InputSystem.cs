@@ -100,5 +100,34 @@ namespace ProjectHH
                 }
             }
         }
+
+        public bool GetIsActionPressed(ControlAction action)
+        {
+            if (_currentState.ContainsKey(action))
+            {
+                return _currentState[action] == KeyState.Pressed;
+            }
+            else
+            {
+                Debug.LogError($"Action {action} not registered");
+                return false;
+            }
+        }
+        
+        public int GetRealHorizontalInput()
+        {
+            int result = 0;
+            if (GetIsActionPressed(ControlAction.MoveLeft))
+            {
+                result -= 1;
+            }
+
+            if (GetIsActionPressed(ControlAction.MoveRight))
+            {
+                result += 1;
+            }
+
+            return result;
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace ProjectHH.StateMachine
         StartJump = CharacterMoveType.InAir << 4,
         InAir = CharacterMoveType.InAir << 4 + 1,
         EndJump = CharacterMoveType.InAir << 4 + 2,
+        ClimbUp = CharacterMoveType.InAir << 4 + 3,                     // 跳跃过程中碰到墙的可以爬上墙
     }
 
     public abstract class CharacterStateBase

@@ -21,10 +21,11 @@ public class HimeHinaConfig : SerializedScriptableObject
 
     [FoldoutGroup("Character")] public Dictionary<string, float> CharacterConfig = new()
     {
-        {"WalkSpeed", 2.0f},
-        {"FirstJumpForce", 6.0f},
-        {"SecondJumpForce", 5.0f},
-        {"Gravity", 9.8f},
-        {"GroundDetectionDistance", 0.01f}
+        { "WalkSpeed", 2.0f },
+        { "FirstJumpForce", 6.0f },
+        { "SecondJumpForce", 5.0f },
+        { "Gravity", 9.8f },
+        { "GroundDetectionDistance", 0.01f },
+        { "ClimbUpHeight", 0.6f }
     };
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ProjectHH.StateMachine;
+using ProjectHH.World;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -32,6 +33,8 @@ namespace ProjectHH
     {
         private Dictionary<CharacterMoveType, CharacterStateBase> _stateMap = new();
         private CharacterMoveType _currentMoveType = CharacterMoveType.Move;
+        private float charaterRadius = 0.2f;
+        private float characterHeight = 1.5f;
 
         [SerializeField] public PlayableAsset PlayableAsset;
 
@@ -47,6 +50,7 @@ namespace ProjectHH
         private static int s_MoveSpeed = Animator.StringToHash("MoveSpeed");
         private static int s_IsMoving = Animator.StringToHash("IsMoving");
         private static int s_TurnAround = Animator.StringToHash("TurnAround");
+        private static int s_ClimbUp = Animator.StringToHash("ClimbUp");
 
         #endregion
 
@@ -137,6 +141,49 @@ namespace ProjectHH
 
         #region Animation
 
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            var gameObject = hit.collider.gameObject;
+            var interact = gameObject.GetComponent<Interactable>();
+            
+            if (interact)
+            { 
+                if(interact.Type == InteractableType.Climb && _currentMoveType == CharacterMoveType.InAir)
+                {
+                    var inAirState = _stateMap[CharacterMoveType.InAir] as CharacterStateInAir;
+                    if (inAirState.GetVerticalSpeed() <= 0)
+                    {
+                        if(CheckCanClimbUp())
+                            _animator.SetTrigger(s_ClimbUp);
+                        
+                    }
+                }
+            }
+
+            bool CheckCanClimbUp()
+            {
+                if ((hit.collider.transform.position.z - transform.position.z) * transform.forward.z < 0)
+                {
+                    Debug.LogError("");
+                    return false;
+                }
+
+                if (hit.collider.transform.position.y - transform.position.y > 1.0f)
+                {
+                    Debug.LogError("太高了");
+                    return false;
+                }
+
+
+                if (transform.forward.z * GameInstance.Get().InputSystem.GetRealHorizontalInput() < 0)
+                {
+                    Debug.LogError("反向移动");
+                    return false;
+                }
+                return true;
+            }
+        }
+
         public void AnimatorStartJump()
         {
             _animator.SetBool(s_IsOnGround, false);
@@ -162,6 +209,11 @@ namespace ProjectHH
         public void AnimatorTurnBack()
         {
             _animator.SetTrigger(s_TurnAround);
+        }
+
+        public void AnimatorTriggerClimbUp()
+        {
+            
         }
 
         private void OnAnimatorMove()
