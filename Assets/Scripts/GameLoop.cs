@@ -20,6 +20,7 @@ namespace ProjectHH
             var gameInstance = GameInstance.Get();
             gameInstance.Update();
         }
+        
     }
  
 }

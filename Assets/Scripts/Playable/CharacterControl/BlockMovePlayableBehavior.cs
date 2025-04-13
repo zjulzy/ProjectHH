@@ -21,13 +21,11 @@ public class BlockMovePlayableBehavior : PlayableBehaviour
     // Called when the state of the playable is set to Play
     public override void OnBehaviourPlay(Playable playable, FrameData info)
     {
-        Character.SkillBlockMoving = true;
     }
 
     // Called when the state of the playable is set to Paused
     public override void OnBehaviourPause(Playable playable, FrameData info)
     {
-        Character.SkillBlockMoving = false;
     }
 
     // Called each frame while the state is set to Play

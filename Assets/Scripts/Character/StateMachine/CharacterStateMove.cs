@@ -72,7 +72,8 @@ namespace ProjectHH.StateMachine
                 else
                 {
                     character.AnimatorStartMove();
-                    if (GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.forward)
+                    if (GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.forward && state == KeyState.Pressed ||
+                        GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.back && state == KeyState.Unpressed)
                     {
                         character.AnimatorTurnBack();
                     }
@@ -87,7 +88,8 @@ namespace ProjectHH.StateMachine
                 else
                 {
                     character.AnimatorStartMove();
-                    if (GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.back)
+                    if (GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.back && state == KeyState.Pressed ||
+                        GameInstance.Get().GetCurrentPlayer().transform.forward == Vector3.forward && state == KeyState.Unpressed)
                     {
                         character.AnimatorTurnBack();
                     }
@@ -103,6 +105,11 @@ namespace ProjectHH.StateMachine
                     _character.AnimatorStartJump();
                 }
             };
+        }
+
+        public override Vector3 OnAnimatorMove(Vector3 moveVector)
+        {
+            return moveVector;
         }
     }
 }

@@ -13,28 +13,14 @@ using Gizmos = Popcron.Gizmos;
 
 namespace ProjectHH
 {
-    [Serializable]
-    public enum TurnState : uint
-    {
-        Turning = 0,
-        Default = 1
-    }
-
-    [Serializable]
-    public enum JumpState : uint
-    {
-        OnGround = 0,
-        FirstJump = 1,
-        SecondJump = 2
-    }
-
     [RequireComponent(typeof(CharacterController), typeof(Animator))]
     public class TestCharacter : CharacterBase
     {
         private Dictionary<CharacterMoveType, CharacterStateBase> _stateMap = new();
         private CharacterMoveType _currentMoveType = CharacterMoveType.Move;
-        private float charaterRadius = 0.2f;
-        private float characterHeight = 1.5f;
+        private float _charaterRadius = 0.2f;
+        private float _characterHeight = 1.5f;
+        public bool IgnoreRootMotionCollision = false;
 
         [SerializeField] public PlayableAsset PlayableAsset;
 
@@ -66,14 +52,8 @@ namespace ProjectHH
 
         public CharacterController CharacterController => _characterController;
         private CharacterController _characterController;
-        public JumpState CurrentJumpState;
-        public TurnState CurrentTurnState;
 
         [ReadOnly] public float _remainingSpeed;
-
-        // 未来改成tag
-        public bool IsBattle = false;
-        public bool SkillBlockMoving = false;
 
         // 战斗相关变量
 
@@ -96,6 +76,9 @@ namespace ProjectHH
         void Update()
         {
             base.Update();
+            _characterController.detectCollisions = !IgnoreRootMotionCollision;
+
+
             var currentCharacterState = _stateMap[_currentMoveType];
             var (nextMoveType, stateTransferObj) = currentCharacterState.CheckSwitchState();
             if (nextMoveType != CharacterMoveType.None)
@@ -108,80 +91,15 @@ namespace ProjectHH
             }
 
             currentCharacterState.Update();
-
-
-            // if (_moveIntent.TriggerJump && !CheckBlockJump())
-            // {
-            //     _moveIntent.TriggerJump = false;
-            //     switch (CurrentJumpState)
-            //     {
-            //         case JumpState.OnGround:
-            //             CurrentJumpState = JumpState.FirstJump;
-            //             _animator.SetTrigger(s_FirstJump);
-            //             PlayerJump(false);
-            //             break;
-            //         case JumpState.FirstJump:
-            //             CurrentJumpState = JumpState.SecondJump;
-            //             PlayerJump(true);
-            //             break;
-            //         case JumpState.SecondJump:
-            //             break;
-            //     }
-            // }
-            //
-            // if (_remainingSpeed != 0)
-            // {
-            //     var deltaTime = Time.deltaTime;
-            //     _characterController.Move(Vector3.up * _remainingSpeed * deltaTime);
-            //     _remainingSpeed -= c_Gravity * deltaTime;
-            // }
         }
 
         #endregion
 
         #region Animation
 
-        private void OnControllerColliderHit(ControllerColliderHit hit)
+        public void StartClimbOn()
         {
-            var gameObject = hit.collider.gameObject;
-            var interact = gameObject.GetComponent<Interactable>();
-            
-            if (interact)
-            { 
-                if(interact.Type == InteractableType.Climb && _currentMoveType == CharacterMoveType.InAir)
-                {
-                    var inAirState = _stateMap[CharacterMoveType.InAir] as CharacterStateInAir;
-                    if (inAirState.GetVerticalSpeed() <= 0)
-                    {
-                        if(CheckCanClimbUp())
-                            _animator.SetTrigger(s_ClimbUp);
-                        
-                    }
-                }
-            }
-
-            bool CheckCanClimbUp()
-            {
-                if ((hit.collider.transform.position.z - transform.position.z) * transform.forward.z < 0)
-                {
-                    Debug.LogError("");
-                    return false;
-                }
-
-                if (hit.collider.transform.position.y - transform.position.y > 1.0f)
-                {
-                    Debug.LogError("太高了");
-                    return false;
-                }
-
-
-                if (transform.forward.z * GameInstance.Get().InputSystem.GetRealHorizontalInput() < 0)
-                {
-                    Debug.LogError("反向移动");
-                    return false;
-                }
-                return true;
-            }
+            _animator.SetTrigger(s_ClimbUp);
         }
 
         public void AnimatorStartJump()
@@ -211,19 +129,16 @@ namespace ProjectHH
             _animator.SetTrigger(s_TurnAround);
         }
 
-        public void AnimatorTriggerClimbUp()
-        {
-            
-        }
-
         private void OnAnimatorMove()
         {
             // 将动画root motion应用到character controller上
-            Vector3 point1 = transform.position + _animator.deltaPosition + Vector3.up * 0.3f;
+            Vector3 point1 = transform.position + _animator.deltaPosition + Vector3.up * 0.2f;
             Vector3 point2 = transform.position + _animator.deltaPosition + Vector3.up * 1.3f;
-            if (Physics.OverlapCapsule(point1, point2, 0.3f).Length == 1)
+            if (IgnoreRootMotionCollision || Physics.OverlapCapsule(point1, point2, 0.2f, layerMask: LayerMask.GetMask("Default")).Length >= 1)
             {
-                _characterController.Move(_animator.deltaPosition);
+                var moveVec = _stateMap[_currentMoveType].OnAnimatorMove(_animator.deltaPosition);
+                moveVec.x = 0;
+                _characterController.Move(moveVec);
             }
             else
             {
@@ -252,26 +167,6 @@ namespace ProjectHH
         //         _remainingSpeed = c_FirstJumpForce;
         //     }
         // }
-
-        private bool CheckBlockMoving()
-        {
-            return SkillBlockMoving;
-        }
-
-        private bool CheckBlockTurning()
-        {
-            return SkillBlockMoving || CurrentJumpState != JumpState.OnGround;
-        }
-
-        private bool CheckBlockJump()
-        {
-            return SkillBlockMoving || CurrentJumpState == JumpState.SecondJump || CurrentTurnState == TurnState.Turning;
-        }
-
-        private bool CheckBlockSkill()
-        {
-            return SkillBlockMoving || CurrentTurnState == TurnState.Turning || CurrentJumpState != JumpState.OnGround;
-        }
 
         #endregion
     }
