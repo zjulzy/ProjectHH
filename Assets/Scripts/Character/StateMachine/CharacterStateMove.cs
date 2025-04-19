@@ -7,10 +7,11 @@ namespace ProjectHH.StateMachine
     {
         public override (CharacterMoveType, StateTransferObjects) CheckSwitchState()
         {
-            if (!GetIsOnGround())
+            if (!GetIsOnGround(out var height))
             {
                 _switchToInAir = true;
             }
+            _character.CharacterController.Move(Vector3.down * (_character.transform.position.y - height));
 
             if (_switchToInAir)
                 return (CharacterMoveType.InAir, _stateTransferObjects);

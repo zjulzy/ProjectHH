@@ -15,14 +15,11 @@ namespace ProjectHH.StateMachine
         private const float c_ClimbAnimTime = 0.833f;
         private Vector3 _targetPos;
 
-        private float _characterRadius = 0.2f;
-        private float _characterHeight = 1.5f;
-
         #region lifecycle
 
         public override (CharacterMoveType, StateTransferObjects) CheckSwitchState()
         {
-            if (GetIsOnGround() && _verticalSpeed <= 0)
+            if (GetIsOnGround(out _) && _verticalSpeed <= 0)
                 return (CharacterMoveType.Move, _stateTransferObjects);
             return (CharacterMoveType.None, default);
         }
@@ -64,10 +61,21 @@ namespace ProjectHH.StateMachine
                     _character.StartClimbOn();
                     _character.IgnoreRootMotionCollision = true;
                     _targetPos = collider.transform.position;
+                    var characterIkGoal = new TestCharacter.IkGoal();
+                    characterIkGoal.TargetPosition = collider.transform.position;
+                    characterIkGoal.TargetRotation = Quaternion.LookRotation(collider.transform.forward, Vector3.up);
+                    characterIkGoal.Weight = 1;
+                    
+                    
+                    _character.IkGoalMap[AvatarIKGoal.LeftHand] = characterIkGoal;
+                    _character.IkGoalMap[AvatarIKGoal.RightHand] = characterIkGoal;
+
                     GameInstance.Get().TimerSystem.AddTimer(c_ClimbAnimTime, () =>
                         {
                             _isClimbingUp = false;
                             _character.IgnoreRootMotionCollision = false;
+                            _character.IkGoalMap.Remove(AvatarIKGoal.LeftHand);
+                            _character.IkGoalMap.Remove(AvatarIKGoal.RightHand);
                         }
                     );
                     return;
@@ -119,26 +127,25 @@ namespace ProjectHH.StateMachine
         {
             if ((colliderPos.z - _character.transform.position.z) * CharacterForward.z < 0)
             {
-                Debug.LogError("");
                 return false;
             }
 
             if (colliderPos.y - _character.transform.position.y > 0.5f)
             {
-                Debug.LogError("太高了");
+                // Debug.LogError("太高了");
                 return false;
             }
 
 
             if (CharacterForward.z * GameInstance.Get().InputSystem.GetRealHorizontalInput() <= 0)
             {
-                Debug.LogError("反向移动");
+                // Debug.LogError("反向移动");
                 return false;
             }
 
             if (_verticalSpeed > 0)
             {
-                Debug.LogError("目前跳跃向量朝上");
+                // Debug.LogError("目前跳跃向量朝上");
                 return false;
             }
 

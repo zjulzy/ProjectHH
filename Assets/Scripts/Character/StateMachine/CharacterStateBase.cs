@@ -29,6 +29,8 @@ namespace ProjectHH.StateMachine
     {
         protected TestCharacter _character;
         protected Vector3 CharacterForward => _character.transform.forward;
+        protected float _characterRadius = 0.2f;
+        protected float _characterHeight = 1.5f;
 
         protected CharacterStateBase()
         {
@@ -56,15 +58,17 @@ namespace ProjectHH.StateMachine
             OnExitState();
         }
 
-        protected bool GetIsOnGround()
+        protected bool GetIsOnGround(out float currentHeight)
         {
             var groundDetectionDistance = GameInstance.Get().GetCharacterConfigByString("GroundDetectionDistance");
             var startPos = _character.transform.position;
             // 后续需要增大向下打的射线的长度，延迟更新jumpstate
-            Gizmos.Line(startPos + Vector3.up * groundDetectionDistance, startPos + Vector3.down * groundDetectionDistance, Color.red);
+            // Gizmos.Line(startPos + Vector3.up * groundDetectionDistance, startPos + Vector3.down * groundDetectionDistance, Color.red);
 
-            var result = Physics.RaycastAll(startPos + Vector3.up * groundDetectionDistance, Vector3.down, groundDetectionDistance * 2,
+            var result = Physics.SphereCastAll(startPos + Vector3.up * (groundDetectionDistance + _characterRadius), _characterRadius, Vector3.down,
+                groundDetectionDistance * 2,
                 layerMask: LayerMask.GetMask("Default"));
+            currentHeight = result.Length > 0 ? startPos.y - result[0].distance + groundDetectionDistance : 0;
             return result.Length > 0;
         }
 

@@ -146,6 +146,27 @@ namespace ProjectHH
             }
         }
 
+        public struct IkGoal
+        {
+            public Vector3 TargetPosition;
+            public Quaternion TargetRotation;
+            public float Weight;
+        }
+        public Dictionary<AvatarIKGoal, IkGoal> IkGoalMap = new();
+        private void OnAnimatorIK(int layerIndex)
+        {
+            foreach (var ikgoal in IkGoalMap)
+            {
+                if (ikgoal.Value.Weight > 0)
+                {
+                    _animator.SetIKPositionWeight(ikgoal.Key, ikgoal.Value.Weight);
+                    _animator.SetIKRotationWeight(ikgoal.Key, ikgoal.Value.Weight);
+                    _animator.SetIKPosition(ikgoal.Key, ikgoal.Value.TargetPosition);
+                    _animator.SetIKRotation(ikgoal.Key, ikgoal.Value.TargetRotation);
+                }
+            }
+        }
+
         #endregion
 
         #region Skill
