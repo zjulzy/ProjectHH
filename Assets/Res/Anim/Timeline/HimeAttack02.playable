@@ -224,31 +224,6 @@ MonoBehaviour:
   m_OpenClipOffsetRotation: {x: 0, y: 0, z: 0, w: 1}
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
   m_ApplyOffsets: 0
---- !u!114 &-5063328390928274814
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0fc6f5187a81dc47999eefade6f0935, type: 3}
-  m_Name: Track Group
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_AnimClip: {fileID: 0}
-  m_Locked: 0
-  m_Muted: 0
-  m_CustomPlayableFullTypename: 
-  m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
-  m_Children:
-  - {fileID: -325576007935580295}
-  - {fileID: 5189303015910733518}
-  m_Clips: []
-  m_Markers:
-    m_Objects: []
 --- !u!114 &-4212471189787047667
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -294,8 +269,9 @@ MonoBehaviour:
   m_Muted: 0
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
-  m_Parent: {fileID: -5063328390928274814}
+  m_Parent: {fileID: 0}
   m_Children: []
+  m_CacheSorted: 0
   m_Clips:
   - m_Version: 1
     m_Start: 0
@@ -309,10 +285,8 @@ MonoBehaviour:
     m_BlendInDuration: -1
     m_BlendOutDuration: -1
     m_MixInCurve:
-      serializedVersion: 2
       m_Curve:
-      - serializedVersion: 3
-        time: 0
+      - time: 0
         value: 0
         inSlope: 0
         outSlope: 0
@@ -320,8 +294,7 @@ MonoBehaviour:
         weightedMode: 0
         inWeight: 0
         outWeight: 0
-      - serializedVersion: 3
-        time: 1
+      - time: 1
         value: 1
         inSlope: 0
         outSlope: 0
@@ -333,10 +306,8 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
-      serializedVersion: 2
       m_Curve:
-      - serializedVersion: 3
-        time: 0
+      - time: 0
         value: 1
         inSlope: 0
         outSlope: 0
@@ -344,8 +315,7 @@ MonoBehaviour:
         weightedMode: 0
         inWeight: 0
         outWeight: 0
-      - serializedVersion: 3
-        time: 1
+      - time: 1
         value: 0
         inSlope: 0
         outSlope: 0
@@ -366,8 +336,12 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: BlockMovePlayableAsset
+    <DirtyIndex>k__BackingField: 0
   m_Markers:
     m_Objects: []
+    m_CacheDirty: 0
+    m_HasNotifications: 0
+  <DirtyIndex>k__BackingField: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,7 +358,6 @@ MonoBehaviour:
   m_Tracks:
   - {fileID: 3151125707442039299}
   - {fileID: 4788176283885129892}
-  - {fileID: -5063328390928274814}
   m_FixedDuration: 0
   m_EditorSettings:
     m_Framerate: 60
@@ -470,8 +443,9 @@ MonoBehaviour:
   m_Muted: 0
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
-  m_Parent: {fileID: -5063328390928274814}
+  m_Parent: {fileID: 0}
   m_Children: []
+  m_CacheSorted: 0
   m_Clips:
   - m_Version: 1
     m_Start: 1.0833333333333333
@@ -485,10 +459,8 @@ MonoBehaviour:
     m_BlendInDuration: -1
     m_BlendOutDuration: -1
     m_MixInCurve:
-      serializedVersion: 2
       m_Curve:
-      - serializedVersion: 3
-        time: 0
+      - time: 0
         value: 0
         inSlope: 0
         outSlope: 0
@@ -496,8 +468,7 @@ MonoBehaviour:
         weightedMode: 0
         inWeight: 0
         outWeight: 0
-      - serializedVersion: 3
-        time: 1
+      - time: 1
         value: 1
         inSlope: 0
         outSlope: 0
@@ -509,10 +480,8 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_MixOutCurve:
-      serializedVersion: 2
       m_Curve:
-      - serializedVersion: 3
-        time: 0
+      - time: 0
         value: 1
         inSlope: 0
         outSlope: 0
@@ -520,8 +489,7 @@ MonoBehaviour:
         weightedMode: 0
         inWeight: 0
         outWeight: 0
-      - serializedVersion: 3
-        time: 1
+      - time: 1
         value: 0
         inSlope: 0
         outSlope: 0
@@ -542,5 +510,9 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: MoveInterruptPlayableAsset
+    <DirtyIndex>k__BackingField: 0
   m_Markers:
     m_Objects: []
+    m_CacheDirty: 0
+    m_HasNotifications: 0
+  <DirtyIndex>k__BackingField: 0
